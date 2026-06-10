@@ -6,11 +6,10 @@ explican las reglas de negocio y el contrato de cada método para fines
 didácticos y de mantenimiento.
 """
 
-import json
-import os
 import re
 from typing import Dict, List, Optional, Tuple
 
+from repositorio_usuarios import cargar_usuarios, guardar_usuarios
 from usuario import Usuario
 
 
@@ -38,21 +37,10 @@ class GestorUsuarios:
         """Carga la lista de usuarios desde `self.archivo`.
 
         Si el archivo no existe, inicializa una lista vacía. Si el JSON está
-        corrupto, se recupera con una lista vacía para evitar excepciones
-        que rompan la aplicación de consola. En entornos reales sería
-        recomendable registrar el error y alertar al operador.
+        corrupto o no se puede leer, se recupera con una lista vacía para
+        evitar excepciones que rompan la aplicación de consola.
         """
-        if os.path.exists(self.archivo):
-            with open(self.archivo, "r", encoding="utf-8") as f:
-                try:
-                    self.usuarios = json.load(f)
-                except (json.JSONDecodeError, OSError):
-                    # Si el archivo existe pero no contiene JSON válido o no
-                    # se puede leer, no propagamos la excepción aquí para
-                    # mantener la experiencia del usuario sencilla.
-                    self.usuarios = []
-        else:
-            self.usuarios = []
+        self.usuarios = cargar_usuarios(self.archivo)
 
         for usuario in self.usuarios:
             # Aceptamos datos legacy con `password` sin `salt`.
@@ -60,16 +48,8 @@ class GestorUsuarios:
                 usuario["salt"] = ""
 
     def guardar_usuarios(self) -> None:
-        """Persiste la lista de usuarios en `self.archivo` en formato JSON.
-
-        Nota: actualmente la escritura no es atómica; para mayor robustez se
-        recomienda escribir a un archivo temporal y renombrarlo.
-        """
-        try:
-            with open(self.archivo, "w", encoding="utf-8") as f:
-                json.dump(self.usuarios, f, indent=4, ensure_ascii=False)
-        except OSError as error:
-            raise RuntimeError("No se pudo guardar el archivo de usuarios.") from error
+        """Persiste la lista de usuarios en `self.archivo` de forma atómica."""
+        guardar_usuarios(self.archivo, self.usuarios)
 
     def obtener_siguiente_id(self) -> int:
         """Devuelve el siguiente ID entero disponible para un nuevo usuario.

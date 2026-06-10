@@ -4,13 +4,23 @@
         "nombre": "José",
         "apellidos": "Aguilera Molina",
         "email": "jose@prueba.com",
-        "password": "12345678"
+        "password": "12345678",
+        "salt": ""
     },
     {
         "id": 2,
         "nombre": "Jose Maria",
         "apellidos": "Lopez Gutierrez",
         "email": "lopezj@prueba.com",
-        "password": "12345678"
+        "password": "12345678",
+        "salt": ""
+    },
+    {
+        "id": 3,
+        "nombre": "Paco",
+        "apellidos": "Martinez Gómora",
+        "email": "martinezp@prueba.com",
+        "password": "ale1m34palIq8vqSwcOkiUYTV0i6EQo+uDKkBOkyqmY=",
+        "salt": "7sscfcUPF7HII25hxJTvxA=="
     }
 ]
