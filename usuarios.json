@@ -5,5 +5,12 @@
         "apellidos": "Aguilera Molina",
         "email": "jose@prueba.com",
         "password": "12345678"
+    },
+    {
+        "id": 2,
+        "nombre": "Jose Maria",
+        "apellidos": "Lopez Gutierrez",
+        "email": "lopezj@prueba.com",
+        "password": "12345678"
     }
 ]

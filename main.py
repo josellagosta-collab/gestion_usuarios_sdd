@@ -1,7 +1,15 @@
+"""Interfaz de consola para la aplicación de gestión de usuarios.
+
+Este módulo ofrece una interacción básica por terminal. Está separado de
+la lógica de negocio (`GestorUsuarios`) para facilitar su prueba y
+reemplazo por otra interfaz (web, API) en el futuro.
+"""
+
 from gestor_usuarios import GestorUsuarios
 
 
-def mostrar_menu():
+def mostrar_menu() -> None:
+    """Muestra las opciones disponibles en la consola."""
     print("\n=== Gestión de Usuarios ===")
     print("1. Crear usuario")
     print("2. Listar usuarios")
@@ -10,7 +18,11 @@ def mostrar_menu():
     print("5. Salir")
 
 
-def crear_usuario(gestor):
+def crear_usuario(gestor: GestorUsuarios) -> None:
+    """Recoge datos por consola y delega la creación al gestor.
+
+    El gestor devuelve una tupla `(ok, mensaje)` que se muestra al usuario.
+    """
     print("\n--- Crear usuario ---")
 
     nombre = input("Nombre: ")
@@ -22,7 +34,8 @@ def crear_usuario(gestor):
     print(mensaje)
 
 
-def listar_usuarios(gestor):
+def listar_usuarios(gestor: GestorUsuarios) -> None:
+    """Imprime la lista de usuarios en formato legible."""
     print("\n--- Lista de usuarios ---")
 
     usuarios = gestor.listar_usuarios()
@@ -38,7 +51,8 @@ def listar_usuarios(gestor):
         print("-" * 30)
 
 
-def modificar_usuario(gestor):
+def modificar_usuario(gestor: GestorUsuarios) -> None:
+    """Pide datos para modificar un usuario existente."""
     print("\n--- Modificar usuario ---")
 
     try:
@@ -55,13 +69,14 @@ def modificar_usuario(gestor):
         id_usuario,
         nombre,
         apellidos,
-        email
+        email,
     )
 
     print(mensaje)
 
 
-def eliminar_usuario(gestor):
+def eliminar_usuario(gestor: GestorUsuarios) -> None:
+    """Solicita el `id` y elimina el usuario si existe."""
     print("\n--- Eliminar usuario ---")
 
     try:
