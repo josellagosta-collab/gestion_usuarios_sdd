@@ -8,6 +8,7 @@ didácticos y de mantenimiento.
 
 import json
 import os
+import re
 from typing import Dict, List, Optional, Tuple
 
 from usuario import Usuario
@@ -45,14 +46,18 @@ class GestorUsuarios:
             with open(self.archivo, "r", encoding="utf-8") as f:
                 try:
                     self.usuarios = json.load(f)
-                except json.JSONDecodeError:
-                    # Si el archivo existe pero no contiene JSON válido,
-                    # no propagamos la excepción aquí para mantener la
-                    # experiencia del usuario sencilla; en producción se
-                    # debería llevar un `logging.exception(...)`.
+                except (json.JSONDecodeError, OSError):
+                    # Si el archivo existe pero no contiene JSON válido o no
+                    # se puede leer, no propagamos la excepción aquí para
+                    # mantener la experiencia del usuario sencilla.
                     self.usuarios = []
         else:
             self.usuarios = []
+
+        for usuario in self.usuarios:
+            # Aceptamos datos legacy con `password` sin `salt`.
+            if "salt" not in usuario:
+                usuario["salt"] = ""
 
     def guardar_usuarios(self) -> None:
         """Persiste la lista de usuarios en `self.archivo` en formato JSON.
@@ -60,8 +65,11 @@ class GestorUsuarios:
         Nota: actualmente la escritura no es atómica; para mayor robustez se
         recomienda escribir a un archivo temporal y renombrarlo.
         """
-        with open(self.archivo, "w", encoding="utf-8") as f:
-            json.dump(self.usuarios, f, indent=4, ensure_ascii=False)
+        try:
+            with open(self.archivo, "w", encoding="utf-8") as f:
+                json.dump(self.usuarios, f, indent=4, ensure_ascii=False)
+        except OSError as error:
+            raise RuntimeError("No se pudo guardar el archivo de usuarios.") from error
 
     def obtener_siguiente_id(self) -> int:
         """Devuelve el siguiente ID entero disponible para un nuevo usuario.
@@ -79,7 +87,15 @@ class GestorUsuarios:
         Devuelve `True` si existe al menos un usuario con ese email, `False`
         en caso contrario.
         """
-        return any(usuario["email"] == email for usuario in self.usuarios)
+        return any(usuario["email"].lower() == email.lower() for usuario in self.usuarios)
+
+    def email_valido(self, email: str) -> bool:
+        """Valida el formato básico de un email.
+
+        Esta validación es simple y cubre los casos más comunes. En un
+        proyecto más grande, conviene usar una librería dedicada.
+        """
+        return bool(re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email))
 
     def crear_usuario(self, nombre: str, apellidos: str, email: str, password: str) -> Tuple[bool, str]:
         """Crea un nuevo usuario si cumple las reglas de negocio.
@@ -92,11 +108,14 @@ class GestorUsuarios:
         Devuelve una tupla `(ok, mensaje)` donde `ok` es `True` en caso de
         éxito y `False` en caso de fallo con un mensaje humano-legible.
         """
-        if not nombre:
+        if not nombre.strip():
             return False, "El nombre es obligatorio."
 
-        if not email:
+        if not email.strip():
             return False, "El email es obligatorio."
+
+        if not self.email_valido(email):
+            return False, "El email no tiene un formato válido."
 
         if self.email_existe(email):
             return False, "Ya existe un usuario con ese email."
@@ -104,7 +123,7 @@ class GestorUsuarios:
         if len(password) < 8:
             return False, "La contraseña debe tener al menos 8 caracteres."
 
-        nuevo_usuario = Usuario(
+        nuevo_usuario = Usuario.crear_con_password(
             self.obtener_siguiente_id(),
             nombre,
             apellidos,
@@ -145,14 +164,17 @@ class GestorUsuarios:
         if usuario is None:
             return False, "No existe un usuario con ese ID."
 
-        if not nombre:
+        if not nombre.strip():
             return False, "El nombre es obligatorio."
 
-        if not email:
+        if not email.strip():
             return False, "El email es obligatorio."
 
+        if not self.email_valido(email):
+            return False, "El email no tiene un formato válido."
+
         for otro_usuario in self.usuarios:
-            if otro_usuario["email"] == email and otro_usuario["id"] != id_usuario:
+            if otro_usuario["email"].lower() == email.lower() and otro_usuario["id"] != id_usuario:
                 return False, "Ya existe otro usuario con ese email."
 
         usuario["nombre"] = nombre

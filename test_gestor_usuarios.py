@@ -15,6 +15,8 @@ def test_crear_usuario_correcto():
 
     assert correcto is True
     assert len(gestor.usuarios) == 1
+    assert gestor.usuarios[0]["password"] != "12345678"
+    assert gestor.usuarios[0].get("salt")
 
 
 def test_email_duplicado():
@@ -38,6 +40,22 @@ def test_email_duplicado():
 
     assert correcto is False
     assert mensaje == "Ya existe un usuario con ese email."
+
+
+def test_email_formato_invalido():
+    gestor = GestorUsuarios("test_usuarios.json")
+    gestor.usuarios = []
+    gestor.guardar_usuarios()
+
+    correcto, mensaje = gestor.crear_usuario(
+        "Luis",
+        "Garcia",
+        "luis-at-test.com",
+        "12345678"
+    )
+
+    assert correcto is False
+    assert mensaje == "El email no tiene un formato válido."
 
 
 def test_password_corta():
