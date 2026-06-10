@@ -4,15 +4,15 @@
         "nombre": "Jose",
         "apellidos": "Aguilera",
         "email": "jose@test.com",
-        "password": "WO5TFrC/Yh8WNJZSlUtII4PetMck9JLN4sJTTeeXJwY=",
-        "salt": "0NtRL8L6jojvtMop+ymoOA=="
+        "password": "+P2WcVo66RCq1j2ilEk7U27TVv8CuGbxD38iIdd7ezI=",
+        "salt": "YXyaXwPssNZCO7n9SQL0Ag=="
     },
     {
         "id": 2,
         "nombre": "Ana",
         "apellidos": "Lopez",
         "email": "ana@test.com",
-        "password": "8mxI/N0LDlYWvUVm+NfpveNZLAmcc4AED48gKjj9jQ4=",
-        "salt": "qAR93k4oZtOZvZZgaQlMwQ=="
+        "password": "lE8aVayZ6E2UR6OKjvpnK15lsfgmhY8pFwEU28F3EyE=",
+        "salt": "GRRaavfU7ymLY+S/Vg59ZQ=="
     }
 ]

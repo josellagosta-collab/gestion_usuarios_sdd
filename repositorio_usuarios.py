@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import tempfile
 from typing import Any, Dict, List
@@ -18,8 +19,11 @@ def cargar_usuarios(archivo: str) -> List[Dict[str, Any]]:
             usuarios = json.load(f)
         if isinstance(usuarios, list):
             return usuarios
-    except (json.JSONDecodeError, OSError):
-        pass
+    except (json.JSONDecodeError, OSError) as exc:
+        logging.warning(
+            "No se pudo cargar %s: %s. Se devolverá lista vacía.", archivo, exc
+        )
+        return []
 
     return []
 
