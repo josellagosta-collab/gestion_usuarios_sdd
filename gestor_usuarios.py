@@ -30,7 +30,7 @@ class GestorUsuarios:
             archivo: Ruta al archivo JSON que contiene la lista de usuarios.
         """
         self.archivo: str = archivo
-        self.usuarios: List[Dict] = []
+        self.usuarios: List[Dict[str, object]] = []
         self.cargar_usuarios()
 
     def cargar_usuarios(self) -> None:
@@ -117,11 +117,11 @@ class GestorUsuarios:
 
         return True, "Usuario creado correctamente."
 
-    def listar_usuarios(self) -> List[Dict]:
+    def listar_usuarios(self) -> List[Dict[str, object]]:
         """Devuelve la lista de usuarios actualmente cargada en memoria."""
         return self.usuarios
 
-    def buscar_usuario_por_id(self, id_usuario: int) -> Optional[Dict]:
+    def buscar_usuario_por_id(self, id_usuario: int) -> Optional[Dict[str, object]]:
         """Busca y devuelve un usuario por su `id`.
 
         Devuelve `None` si no existe.
