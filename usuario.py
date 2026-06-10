@@ -19,7 +19,9 @@ class Usuario:
     original en texto plano.
     """
 
-    def __init__(self, id: int, nombre: str, apellidos: str, email: str, password: str, salt: str) -> None:
+    def __init__(
+        self, id: int, nombre: str, apellidos: str, email: str, password: str, salt: str
+    ) -> None:
         self.id: int = id
         self.nombre: str = nombre
         self.apellidos: str = apellidos
@@ -28,7 +30,9 @@ class Usuario:
         self.salt: str = salt
 
     @classmethod
-    def crear_con_password(cls, id: int, nombre: str, apellidos: str, email: str, password: str) -> "Usuario":
+    def crear_con_password(
+        cls, id: int, nombre: str, apellidos: str, email: str, password: str
+    ) -> "Usuario":
         """Crea una instancia de usuario usando un hash seguro de la contraseña."""
         salt = base64.b64encode(os.urandom(16)).decode("utf-8")
         password_hash = cls._hash_password(password, salt)

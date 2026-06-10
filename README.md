@@ -1,6 +1,9 @@
 # Aplicación de Gestión de Usuarios
 
-Proyecto desarrollado siguiendo una metodología SDD, donde primero se ha creado una especificación funcional en `PRD.md` y después se ha generado el código.
+Proyecto sencillo en Python para gestionar usuarios desde la consola. Implementa
+operaciones CRUD (crear, listar, modificar, eliminar) y persiste los datos en
+un archivo JSON de forma atómica. Las contraseñas se almacenan como hashes
+seguros con sal (no en texto plano).
 
 ## Funcionalidades
 
@@ -8,32 +11,68 @@ Proyecto desarrollado siguiendo una metodología SDD, donde primero se ha creado
 - Listar usuarios
 - Modificar usuarios
 - Eliminar usuarios
-- Guardar datos en JSON
+- Guardar datos en JSON con persistencia atómica
+- Almacenar contraseñas como hashes seguros con sal
 
 ## Estructura del proyecto
 
 ```text
-gestion_usuarios_sdd/
-│
+Gestión de usuarios SDD/
 ├── PRD.md
 ├── README.md
-├── main.py
-├── usuario.py
-├── gestor_usuarios.py
-├── usuarios.json
-└── test_gestor_usuarios.py
+├── pyproject.toml
+├── requirements-dev.txt
+├── main.py              # CLI y modo interactivo
+├── usuario.py           # Modelo de dominio
+├── gestor_usuarios.py   # Lógica de negocio
+├── repositorio_usuarios.py # Persistencia (JSON, atómica)
+├── usuarios.json        # Datos de ejemplo
+├── test_*.py            # Pruebas unitarias
 ```
 
-## Ejecutar la aplicación
+## Requisitos
+
+- Python 3.10 o superior
+
+## Instalación
 
 ```bash
-python main.py
+python -m pip install --upgrade pip
+python -m pip install -r requirements-dev.txt
 ```
 
-o en Linux:
+## Uso
+
+### Modo interactivo
 
 ```bash
-python3 main.py
+python main.py interactivo
+```
+
+### Uso como CLI (no interactivo)
+
+Crear usuario:
+
+```bash
+python main.py crear --nombre "Jose" --apellidos "Lopez" --email jose@test.com --password 12345678
+```
+
+Listar usuarios:
+
+```bash
+python main.py listar
+```
+
+Modificar usuario:
+
+```bash
+python main.py modificar --id 1 --nombre "Jose" --apellidos "Perez" --email jose@nuevo.com
+```
+
+Eliminar usuario:
+
+```bash
+python main.py eliminar --id 1
 ```
 
 ## Ejecutar pruebas
@@ -42,10 +81,37 @@ python3 main.py
 pytest
 ```
 
-## Metodología utilizada
+## Calidad y formateo
 
-El proyecto sigue el flujo SDD:
+Usa `ruff` y `black` para comprobar estilo y formateo:
 
-```text
-Especificación → IA → Código → Pruebas → Git → Documentación
+```bash
+python -m ruff check .
+python -m black .
 ```
+
+## Integración continua
+
+El proyecto incluye un flujo de GitHub Actions que ejecuta las pruebas y la
+comprobación de estilo en cada push y pull request (`.github/workflows/python-ci.yml`).
+
+## Contribuir
+
+Si quieres contribuir:
+
+- Abre un issue describiendo la propuesta.
+- Crea un branch y un PR usando el flujo habitual.
+- Asegúrate de que `pytest`, `ruff` y `black` pasan antes de enviar el PR.
+
+## Notas
+
+- Las contraseñas se almacenan como hashes seguros con sal y no en texto plano.
+- La persistencia de usuarios usa una escritura atómica para reducir el riesgo de
+  corrupción de datos.
+- El proyecto está diseñado para ser extensible a otras interfaces (API, web)
+  sin modificar la lógica de negocio.
+
+## Licencia
+
+Por defecto este repositorio no incluye una licencia; añade una `LICENSE` si
+quieres compartir el código públicamente.

@@ -15,7 +15,9 @@ def configurar_logging() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 
-def crear_usuario(gestor: GestorUsuarios, nombre: str, apellidos: str, email: str, password: str) -> int:
+def crear_usuario(
+    gestor: GestorUsuarios, nombre: str, apellidos: str, email: str, password: str
+) -> int:
     correcto, mensaje = gestor.crear_usuario(nombre, apellidos, email, password)
     if correcto:
         logging.info(mensaje)
@@ -38,7 +40,9 @@ def listar_usuarios(gestor: GestorUsuarios) -> int:
     return 0
 
 
-def modificar_usuario(gestor: GestorUsuarios, id_usuario: int, nombre: str, apellidos: str, email: str) -> int:
+def modificar_usuario(
+    gestor: GestorUsuarios, id_usuario: int, nombre: str, apellidos: str, email: str
+) -> int:
     correcto, mensaje = gestor.modificar_usuario(id_usuario, nombre, apellidos, email)
     if correcto:
         logging.info(mensaje)
@@ -106,26 +110,40 @@ def main(argv: List[str] | None = None) -> int:
         description="Gestión de usuarios desde la línea de comandos.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("--archivo", default="usuarios.json", help="Archivo JSON donde se guardan los usuarios.")
+    parser.add_argument(
+        "--archivo",
+        default="usuarios.json",
+        help="Archivo JSON donde se guardan los usuarios.",
+    )
 
     subparsers = parser.add_subparsers(dest="comando", title="comandos")
 
     parser_crear = subparsers.add_parser("crear", help="Crear un nuevo usuario")
     parser_crear.add_argument("--nombre", required=True, help="Nombre del usuario")
-    parser_crear.add_argument("--apellidos", required=True, help="Apellidos del usuario")
+    parser_crear.add_argument(
+        "--apellidos", required=True, help="Apellidos del usuario"
+    )
     parser_crear.add_argument("--email", required=True, help="Email del usuario")
-    parser_crear.add_argument("--password", required=True, help="Contraseña del usuario")
+    parser_crear.add_argument(
+        "--password", required=True, help="Contraseña del usuario"
+    )
 
-    parser_listar = subparsers.add_parser("listar", help="Listar todos los usuarios")
+    subparsers.add_parser("listar", help="Listar todos los usuarios")
 
-    parser_modificar = subparsers.add_parser("modificar", help="Modificar un usuario existente")
-    parser_modificar.add_argument("--id", type=int, required=True, help="ID del usuario")
+    parser_modificar = subparsers.add_parser(
+        "modificar", help="Modificar un usuario existente"
+    )
+    parser_modificar.add_argument(
+        "--id", type=int, required=True, help="ID del usuario"
+    )
     parser_modificar.add_argument("--nombre", required=True, help="Nuevo nombre")
     parser_modificar.add_argument("--apellidos", required=True, help="Nuevos apellidos")
     parser_modificar.add_argument("--email", required=True, help="Nuevo email")
 
     parser_eliminar = subparsers.add_parser("eliminar", help="Eliminar un usuario")
-    parser_eliminar.add_argument("--id", type=int, required=True, help="ID del usuario a eliminar")
+    parser_eliminar.add_argument(
+        "--id", type=int, required=True, help="ID del usuario a eliminar"
+    )
 
     subparsers.add_parser("interactivo", help="Modo interactivo en consola")
 
@@ -135,11 +153,15 @@ def main(argv: List[str] | None = None) -> int:
     if args.comando is None or args.comando == "interactivo":
         return ejecutar_interactivo(gestor)
     if args.comando == "crear":
-        return crear_usuario(gestor, args.nombre, args.apellidos, args.email, args.password)
+        return crear_usuario(
+            gestor, args.nombre, args.apellidos, args.email, args.password
+        )
     if args.comando == "listar":
         return listar_usuarios(gestor)
     if args.comando == "modificar":
-        return modificar_usuario(gestor, args.id, args.nombre, args.apellidos, args.email)
+        return modificar_usuario(
+            gestor, args.id, args.nombre, args.apellidos, args.email
+        )
     if args.comando == "eliminar":
         return eliminar_usuario(gestor, args.id)
 

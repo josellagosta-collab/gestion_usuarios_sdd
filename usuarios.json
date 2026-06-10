@@ -22,5 +22,13 @@
         "email": "martinezp@prueba.com",
         "password": "ale1m34palIq8vqSwcOkiUYTV0i6EQo+uDKkBOkyqmY=",
         "salt": "7sscfcUPF7HII25hxJTvxA=="
+    },
+    {
+        "id": 4,
+        "nombre": "Irene",
+        "apellidos": "Gato Balsa",
+        "email": "gatoi@prueba.com",
+        "password": "JxAatOk/OUw5pbCA1RSylLSfSoTpiT9We7B08TuEqq0=",
+        "salt": "wNrqzyfGsRI/Kp7coMU04Q=="
     }
 ]

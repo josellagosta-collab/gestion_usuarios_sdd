@@ -67,7 +67,9 @@ class GestorUsuarios:
         Devuelve `True` si existe al menos un usuario con ese email, `False`
         en caso contrario.
         """
-        return any(usuario["email"].lower() == email.lower() for usuario in self.usuarios)
+        return any(
+            usuario["email"].lower() == email.lower() for usuario in self.usuarios
+        )
 
     def email_valido(self, email: str) -> bool:
         """Valida el formato básico de un email.
@@ -77,7 +79,9 @@ class GestorUsuarios:
         """
         return bool(re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email))
 
-    def crear_usuario(self, nombre: str, apellidos: str, email: str, password: str) -> Tuple[bool, str]:
+    def crear_usuario(
+        self, nombre: str, apellidos: str, email: str, password: str
+    ) -> Tuple[bool, str]:
         """Crea un nuevo usuario si cumple las reglas de negocio.
 
         Reglas principales validadas aquí:
@@ -131,7 +135,9 @@ class GestorUsuarios:
                 return usuario
         return None
 
-    def modificar_usuario(self, id_usuario: int, nombre: str, apellidos: str, email: str) -> Tuple[bool, str]:
+    def modificar_usuario(
+        self, id_usuario: int, nombre: str, apellidos: str, email: str
+    ) -> Tuple[bool, str]:
         """Modifica los datos de un usuario existente.
 
         Validaciones:
@@ -154,7 +160,10 @@ class GestorUsuarios:
             return False, "El email no tiene un formato válido."
 
         for otro_usuario in self.usuarios:
-            if otro_usuario["email"].lower() == email.lower() and otro_usuario["id"] != id_usuario:
+            if (
+                otro_usuario["email"].lower() == email.lower()
+                and otro_usuario["id"] != id_usuario
+            ):
                 return False, "Ya existe otro usuario con ese email."
 
         usuario["nombre"] = nombre

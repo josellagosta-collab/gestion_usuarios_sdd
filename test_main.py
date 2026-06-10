@@ -6,19 +6,21 @@ from main import main
 
 def test_main_crear_usuario_cli(tmp_path: Path):
     archivo = tmp_path / "usuarios.json"
-    exit_code = main([
-        "--archivo",
-        str(archivo),
-        "crear",
-        "--nombre",
-        "CLI",
-        "--apellidos",
-        "Usuario",
-        "--email",
-        "cli@test.com",
-        "--password",
-        "12345678",
-    ])
+    exit_code = main(
+        [
+            "--archivo",
+            str(archivo),
+            "crear",
+            "--nombre",
+            "CLI",
+            "--apellidos",
+            "Usuario",
+            "--email",
+            "cli@test.com",
+            "--password",
+            "12345678",
+        ]
+    )
 
     assert exit_code == 0
     assert archivo.exists()
